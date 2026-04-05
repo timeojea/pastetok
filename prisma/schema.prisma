@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Download {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  sourceUrl   String
+  downloadType String  // "no_watermark" | "watermark" | "audio"
+  hashedIp    String
+  videoId     String?
+  author      String?
+  success     Boolean  @default(true)
+
+  @@index([createdAt])
+  @@index([hashedIp])
+}
+
+model RateLimit {
+  id        Int      @id @default(autoincrement())
+  hashedIp  String   @unique
+  count     Int      @default(0)
+  resetAt   DateTime
+
+  @@index([hashedIp])
+}
