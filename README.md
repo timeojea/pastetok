@@ -1,76 +1,141 @@
+<div align="center">
+
 # PasteTok
 
-Téléchargeur de vidéos TikTok : MP4 sans filigrane, avec filigrane, ou MP3. Gratuit, sans inscription, sans pub, sans cookie.
+**Téléchargez n'importe quelle vidéo TikTok publique en MP4 sans filigrane, avec filigrane ou en MP3.**
+Gratuit · Sans inscription · Sans pub · Sans cookie · Sans serveur
 
-**▶ [timeojea.github.io/pastetok](https://timeojea.github.io/pastetok/)**
+### [▶ Essayer : timeojea.github.io/pastetok](https://timeojea.github.io/pastetok/)
 
-## Comment ça marche
+[![Deploy](https://github.com/timeojea/pastetok/actions/workflows/deploy.yml/badge.svg)](https://github.com/timeojea/pastetok/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-ff2d6f.svg)](LICENSE)
+![Next.js](https://img.shields.io/badge/Next.js_14-black?logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)
+![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-222?logo=github&logoColor=white)
 
-Site **100 % statique** (export Next.js) hébergé sur GitHub Pages. Pas de serveur, pas de base de données : tout se passe dans le navigateur.
+<br>
 
-1. L'URL TikTok collée est validée côté client (domaines TikTok uniquement).
-2. Le navigateur appelle l'API publique [tikwm.com](https://www.tikwm.com) (sans clé, CORS ouvert) pour obtenir les liens MP4/MP3.
-3. Le fichier est récupéré directement depuis le CDN TikTok (CORS ouvert) puis enregistré via `fetch → blob → <a download>`. Si le fetch échoue, le lien s'ouvre dans un nouvel onglet.
+<img src="docs/home.png" alt="Page d'accueil de PasteTok sur ordinateur" width="68%">
+&nbsp;
+<img src="docs/mobile.jpg" alt="Page d'accueil de PasteTok sur mobile" width="22%">
 
-## Stack
+</div>
 
-- **Next.js 14** (App Router, `output: 'export'`) + TypeScript
-- **Tailwind CSS**, **lucide-react**
-- **tikwm.com** (extraction des liens vidéo)
-- **GitHub Pages** + GitHub Actions (déploiement à chaque push sur `main`)
+---
 
-## Démarrage
+## ✨ Fonctionnalités
+
+| | |
+|---|---|
+| 🎬 **3 formats** | MP4 sans filigrane (recommandé), MP4 avec filigrane, MP3 (bande son seule) |
+| 👀 **Aperçu** | Miniature, titre, auteur, durée, likes et vues avant de télécharger |
+| 🔒 **Zéro donnée collectée** | Pas de serveur, pas de base, pas de cookie, pas de tracker |
+| 📱 **Mobile-first** | Pensé pour le téléphone, où l'on copie les liens TikTok |
+| ⚡ **Rapide** | Site statique servi par le CDN de GitHub, ~90 Ko de JS au premier chargement |
+| 🔗 **Tous les liens** | `tiktok.com`, `www.`, `m.`, liens courts `vm.` / `vt.tiktok.com` |
+
+## ⚙️ Comment ça marche
+
+PasteTok n'a **aucun backend** : c'est un export statique de Next.js, et tout se passe dans le navigateur du visiteur.
+
+```mermaid
+sequenceDiagram
+    actor U as Visiteur
+    participant P as PasteTok<br/>(navigateur)
+    participant W as tikwm.com
+    participant C as CDN TikTok
+
+    U->>P: Colle le lien TikTok
+    P->>P: Valide le domaine
+    P->>W: POST /api/ (url)
+    W-->>P: Métadonnées + liens MP4/MP3
+    U->>P: Choisit un format
+    P->>C: fetch du fichier
+    C-->>P: MP4 / MP3
+    P-->>U: Enregistre le fichier (blob)
+```
+
+1. L'URL collée est validée côté client (domaines TikTok uniquement) : [`lib/security.ts`](lib/security.ts).
+2. Le navigateur interroge l'API publique [tikwm.com](https://www.tikwm.com), sans clé, qui renvoie les liens directs : [`lib/tiktok.ts`](lib/tiktok.ts).
+3. Le fichier est récupéré **directement** depuis le CDN TikTok, puis enregistré sous un nom propre (`tiktok_<id>_nowm.mp4`).
+
+Ça fonctionne sans proxy parce que tikwm **et** le CDN TikTok renvoient `Access-Control-Allow-Origin: *`. Si un téléchargement échoue quand même, le fichier s'ouvre dans un nouvel onglet pour être enregistré à la main.
+
+## 🚀 Lancer en local
+
+Prérequis : Node.js 20+.
 
 ```bash
+git clone https://github.com/timeojea/pastetok.git
+cd pastetok
 npm install
 npm run dev
 ```
 
-Ouvrir [http://localhost:3000/pastetok](http://localhost:3000/pastetok) (le site est servi sous le `basePath` `/pastetok`).
+Ouvrir **[localhost:3000/pastetok](http://localhost:3000/pastetok)** : le site est servi sous le `basePath` `/pastetok`, comme sur GitHub Pages.
 
-`npm run build` génère le site statique dans `out/`.
+| Commande | Effet |
+|---|---|
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Export statique dans `out/` |
+| `npm run lint` | ESLint |
 
 ### Variables d'environnement (optionnelles)
 
-| Variable | Défaut |
-|---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://timeojea.github.io/pastetok` |
-| `NEXT_PUBLIC_SITE_NAME` | `PasteTok` |
+| Variable | Défaut | Rôle |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | `https://timeojea.github.io/pastetok` | URL canonique, Open Graph, sitemap |
+| `NEXT_PUBLIC_SITE_NAME` | `PasteTok` | Nom affiché dans les métadonnées |
 
-Pour un fork servi sous un autre chemin, adapter `basePath` dans `next.config.mjs`.
+## 🌍 Héberger votre propre copie
 
-## Pages
+1. **Forkez** le dépôt.
+2. Si le dépôt ne s'appelle plus `pastetok`, adaptez `basePath` dans [`next.config.mjs`](next.config.mjs) (et `NEXT_PUBLIC_SITE_URL`). Avec un domaine perso à la racine, supprimez `basePath`.
+3. **Settings → Pages → Source : GitHub Actions**.
+4. Poussez sur `main` : [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) build et publie automatiquement.
 
-| Route | Description |
-|---|---|
-| `/` | Accueil, saisie de l'URL TikTok |
-| `/download` | Aperçu + choix du format |
-| `/contact` | Renvoie vers les issues GitHub |
-| `/mentions-legales`, `/cgu`, `/politique-de-confidentialite` | Pages légales |
+Le dossier `out/` étant 100 % statique, il se déploie aussi tel quel sur Cloudflare Pages, Netlify, Vercel ou n'importe quel serveur de fichiers.
 
-## Structure
+## 🗂️ Structure
 
 ```
-├── app/              — Pages (App Router) + sitemap
+├── app/
+│   ├── page.tsx                 — Accueil (saisie du lien)
+│   ├── download/page.tsx        — Aperçu + choix du format
+│   ├── contact/, cgu/, …        — Pages secondaires et légales
+│   └── sitemap.ts
 ├── components/
-│   ├── layout/       — Header, Footer
-│   ├── home/         — Hero, HowItWorks, FAQ
-│   └── download/     — VideoPreview, DownloadOptions
+│   ├── home/                    — HeroSection, HowItWorks, FAQ
+│   ├── download/                — VideoPreview, DownloadOptions
+│   └── layout/                  — Header, Footer
 ├── lib/
-│   ├── tiktok.ts     — Client tikwm.com + téléchargement (changer de fournisseur ici)
-│   └── security.ts   — Validation d'URL, nettoyage des entrées
+│   ├── tiktok.ts                — Client tikwm + téléchargement (changer de fournisseur ici)
+│   └── security.ts              — Validation d'URL, nettoyage des entrées
+├── next.config.mjs              — output: 'export', basePath
 └── .github/workflows/deploy.yml — Build + déploiement GitHub Pages
 ```
 
-## Limites
+## ⚠️ Limites connues
 
-- Dépend de **tikwm.com** : si l'API tombe, change ses règles CORS ou devient payante, le site ne fonctionne plus.
-- Les vidéos restent la propriété de leurs créateurs. Outil destiné à un usage personnel : respectez les droits d'auteur et les conditions de TikTok.
+- **Dépendance à tikwm.com** : si l'API tombe, ferme son CORS ou devient payante, l'extraction ne fonctionne plus. Le point d'entrée à remplacer est `fetchTikTokVideo()` dans [`lib/tiktok.ts`](lib/tiktok.ts).
+- **Vidéos privées ou supprimées** : non récupérables.
+- **Interface en français uniquement.**
 
-## Contribuer
+## 🤝 Contribuer
 
-Issues et pull requests bienvenues.
+Issues et pull requests bienvenues : [ouvrir une issue](https://github.com/timeojea/pastetok/issues).
 
-## Licence
+Pistes ouvertes :
+- fournisseur de secours si tikwm est indisponible ;
+- menu de navigation sur mobile (les liens du header sont masqués sous `md`) ;
+- image Open Graph (`public/og-image.png`, référencée mais absente) ;
+- version anglaise.
+
+## ⚖️ Avertissement
+
+PasteTok est un outil technique destiné à un **usage personnel**. Il n'héberge, ne stocke et ne redistribue aucune vidéo. Les contenus restent la propriété de leurs créateurs : respectez les droits d'auteur et les [conditions d'utilisation de TikTok](https://www.tiktok.com/legal/terms-of-service). Projet indépendant, sans lien avec TikTok ou ByteDance.
+
+## 📄 Licence
 
 [MIT](LICENSE) © Timéo Jeannin
