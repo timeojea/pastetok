@@ -3,7 +3,7 @@
 # PasteTok
 
 **Download any public TikTok video as MP4 without watermark, with watermark, or as MP3.**
-Free · No sign-up · No ads · No cookies · No server
+Free · No sign-up · No ads · No cookies · No server · English & French
 
 ### [▶ Try it: timeojea.github.io/pastetok](https://timeojea.github.io/pastetok/)
 
@@ -28,8 +28,7 @@ Free · No sign-up · No ads · No cookies · No server
 | 📱 **Mobile-first** | Built for phones, where TikTok links get copied |
 | ⚡ **Fast** | Static site served by GitHub's CDN, ~90 kB of JS on first load |
 | 🔗 **Every link format** | `tiktok.com`, `www.`, `m.`, short links `vm.` / `vt.tiktok.com` |
-
-> The interface is in French.
+| 🌍 **Bilingual** | French at `/pastetok/`, English at `/pastetok/en/`, each pre-rendered with its own `hreflang` alternates |
 
 ## ⚙️ How it works
 
@@ -97,15 +96,18 @@ Since `out/` is fully static, it can also be deployed as-is to Cloudflare Pages,
 
 ```
 ├── app/
-│   ├── page.tsx                 — Home (link input)
-│   ├── download/page.tsx        — Preview + format picker
-│   ├── contact/, cgu/, …        — Secondary and legal pages
-│   └── sitemap.ts
+│   ├── (fr)/                    — French routes (root layout + thin pages)
+│   ├── (en)/en/                 — English routes (root layout + thin pages)
+│   └── sitemap.ts               — Both languages, with hreflang alternates
 ├── components/
+│   ├── views/                   — Page content shared by both languages
+│   ├── legal/                   — Legal notice, terms, privacy (FR + EN text)
 │   ├── home/                    — HeroSection, HowItWorks, FAQ
 │   ├── download/                — VideoPreview, DownloadOptions
-│   └── layout/                  — Header, Footer
+│   └── layout/                  — RootShell, Header, Footer, LangSwitch
 ├── lib/
+│   ├── i18n.ts                  — UI strings + localized routes (add a language here)
+│   ├── seo.ts                   — Per-page metadata, canonical + hreflang
 │   ├── tiktok.ts                — tikwm client + download (swap the provider here)
 │   └── security.ts              — URL validation, input sanitizing
 ├── next.config.mjs              — output: 'export', basePath
@@ -116,7 +118,6 @@ Since `out/` is fully static, it can also be deployed as-is to Cloudflare Pages,
 
 - **Depends on tikwm.com**: if the API goes down, closes its CORS or becomes paid, extraction stops working. The entry point to replace is `fetchTikTokVideo()` in [`lib/tiktok.ts`](lib/tiktok.ts).
 - **Private or deleted videos** can't be retrieved.
-- **French-only interface.**
 
 ## 🤝 Contributing
 
@@ -125,8 +126,8 @@ Issues and pull requests are welcome: [open an issue](https://github.com/timeoje
 Open ideas:
 - fallback provider when tikwm is unavailable;
 - mobile navigation menu (header links are hidden below `md`);
-- Open Graph image (`public/og-image.png`, referenced but missing);
-- English version of the interface.
+- Open Graph image;
+- more languages (strings and routes live in [`lib/i18n.ts`](lib/i18n.ts)).
 
 ## ⚖️ Disclaimer
 

@@ -1,3 +1,5 @@
+import type { TikTokErrorCode } from './i18n';
+
 export interface TikTokVideo {
   id: string;
   title: string;
@@ -15,7 +17,7 @@ export interface TikTokVideo {
 export interface TikTokApiResponse {
   success: boolean;
   video?: TikTokVideo;
-  error?: string;
+  error?: TikTokErrorCode;
 }
 
 // Using tikwm.com public API — no key required.
@@ -40,7 +42,7 @@ export async function fetchTikTokVideo(url: string): Promise<TikTokApiResponse> 
     });
 
     if (!response.ok) {
-      return { success: false, error: 'Service temporairement indisponible.' };
+      return { success: false, error: 'unavailable' };
     }
 
     const data = await response.json();
@@ -48,12 +50,12 @@ export async function fetchTikTokVideo(url: string): Promise<TikTokApiResponse> 
     if (data.code !== 0 || !data.data) {
       const msg = data.msg?.toLowerCase() || '';
       if (msg.includes('private') || msg.includes('privé')) {
-        return { success: false, error: 'Cette vidéo est privée.' };
+        return { success: false, error: 'private' };
       }
       if (msg.includes('not found') || msg.includes('deleted')) {
-        return { success: false, error: 'Vidéo introuvable ou supprimée.' };
+        return { success: false, error: 'not_found' };
       }
-      return { success: false, error: 'Impossible de récupérer la vidéo. Vérifiez le lien.' };
+      return { success: false, error: 'invalid' };
     }
 
     const d = data.data;
@@ -76,9 +78,9 @@ export async function fetchTikTokVideo(url: string): Promise<TikTokApiResponse> 
     };
   } catch (err) {
     if (err instanceof Error && err.name === 'TimeoutError') {
-      return { success: false, error: 'La requête a expiré. Réessayez.' };
+      return { success: false, error: 'timeout' };
     }
-    return { success: false, error: 'Erreur réseau. Réessayez dans quelques instants.' };
+    return { success: false, error: 'network' };
   }
 }
 

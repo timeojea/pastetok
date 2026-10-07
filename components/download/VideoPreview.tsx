@@ -1,12 +1,15 @@
 import Image from 'next/image';
 import { Play, Heart, Clock, User } from 'lucide-react';
 import { TikTokVideo, formatDuration, formatCount } from '@/lib/tiktok';
+import { DICT, type Lang } from '@/lib/i18n';
 
 interface VideoPreviewProps {
   video: TikTokVideo;
+  lang: Lang;
 }
 
-export default function VideoPreview({ video }: VideoPreviewProps) {
+export default function VideoPreview({ video, lang }: VideoPreviewProps) {
+  const t = DICT[lang].preview;
   return (
     <div className="rounded-2xl bg-gray-900 border border-gray-800 overflow-hidden">
       <div className="flex flex-col sm:flex-row gap-4 p-4">
@@ -35,7 +38,7 @@ export default function VideoPreview({ video }: VideoPreviewProps) {
         {/* Info */}
         <div className="flex-1 min-w-0">
           <h2 className="text-white font-semibold text-sm leading-relaxed line-clamp-3 mb-3">
-            {video.title || 'Vidéo TikTok'}
+            {video.title || t.fallbackTitle}
           </h2>
           <div className="flex flex-wrap gap-3 text-xs text-gray-400">
             <span className="flex items-center gap-1">
@@ -57,7 +60,7 @@ export default function VideoPreview({ video }: VideoPreviewProps) {
             {video.plays > 0 && (
               <span className="flex items-center gap-1">
                 <Play className="h-3.5 w-3.5" />
-                {formatCount(video.plays)} vues
+                {formatCount(video.plays)} {t.views}
               </span>
             )}
           </div>

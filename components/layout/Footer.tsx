@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { DICT, ROUTES, type Lang } from '@/lib/i18n';
 
-export default function Footer() {
+export default function Footer({ lang }: { lang: Lang }) {
+  const t = DICT[lang].footer;
+  const r = ROUTES[lang];
   const currentYear = new Date().getFullYear();
   return (
     <footer className="border-t border-gray-800 bg-gray-950 mt-16">
@@ -10,38 +13,34 @@ export default function Footer() {
             <p className="text-white font-bold text-lg mb-2">
               Paste<span className="text-brand-500">Tok</span>
             </p>
-            <p className="text-xs leading-relaxed">
-              Téléchargez des vidéos TikTok gratuitement, sans filigrane.
-              Outil tiers non affilié à TikTok.
-            </p>
+            <p className="text-xs leading-relaxed">{t.tagline}</p>
           </div>
           <div>
-            <p className="text-white font-semibold mb-2">Liens</p>
+            <p className="text-white font-semibold mb-2">{t.links}</p>
             <ul className="space-y-1">
-              <li><Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link></li>
-              <li><Link href="/cgu" className="hover:text-white transition-colors">CGU</Link></li>
-              <li><Link href="/politique-de-confidentialite" className="hover:text-white transition-colors">Politique de confidentialité</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+              <li><Link href={r.legal} className="hover:text-white transition-colors">{t.legal}</Link></li>
+              <li><Link href={r.terms} className="hover:text-white transition-colors">{t.terms}</Link></li>
+              <li><Link href={r.privacy} className="hover:text-white transition-colors">{t.privacy}</Link></li>
+              <li><Link href={r.contact} className="hover:text-white transition-colors">{t.contact}</Link></li>
             </ul>
           </div>
           <div>
-            <p className="text-white font-semibold mb-2">Légal</p>
+            <p className="text-white font-semibold mb-2">{t.legalTitle}</p>
             <p className="text-xs leading-relaxed">
-              Nous ne stockons aucune vidéo sur nos serveurs.
-              Respectez les droits d&apos;auteur et les{' '}
+              {t.legalText}
               <a
                 href="https://www.tiktok.com/legal/terms-of-service"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline hover:text-white"
               >
-                CGU de TikTok
+                {t.tiktokTerms}
               </a>.
             </p>
           </div>
         </div>
         <p className="mt-6 text-center text-xs text-gray-600">
-          © {currentYear} PasteTok. Tous droits réservés.
+          © {currentYear} PasteTok. {t.rights}
         </p>
       </div>
     </footer>

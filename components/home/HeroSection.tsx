@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Download, Loader2, Link as LinkIcon } from 'lucide-react';
 import { fetchTikTokVideo } from '@/lib/tiktok';
 import { isValidTikTokUrl, sanitizeString } from '@/lib/security';
+import { DICT, ROUTES, type Lang } from '@/lib/i18n';
 
-export default function HeroSection() {
+export default function HeroSection({ lang }: { lang: Lang }) {
+  const t = DICT[lang];
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,11 +20,11 @@ export default function HeroSection() {
 
     const cleanUrl = sanitizeString(url);
     if (!cleanUrl) {
-      setError('Collez une URL TikTok ici.');
+      setError(t.hero.errEmpty);
       return;
     }
     if (!isValidTikTokUrl(cleanUrl)) {
-      setError('URL invalide. Seules les URLs TikTok (tiktok.com, vm.tiktok.com) sont acceptées.');
+      setError(t.hero.errInvalid);
       return;
     }
 
@@ -31,15 +33,15 @@ export default function HeroSection() {
       const result = await fetchTikTokVideo(cleanUrl);
 
       if (!result.success || !result.video) {
-        setError(result.error || 'Erreur inconnue.');
+        setError(t.errors[result.error || 'invalid']);
         return;
       }
 
       // Store result in sessionStorage for the download page
       sessionStorage.setItem('tiktok_video', JSON.stringify(result.video));
-      router.push('/download');
+      router.push(ROUTES[lang].download);
     } catch {
-      setError('Erreur réseau. Vérifiez votre connexion.');
+      setError(t.errors.network);
     } finally {
       setLoading(false);
     }
@@ -56,16 +58,16 @@ export default function HeroSection() {
       <div className="relative mx-auto max-w-3xl text-center">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-950 border border-brand-800 px-3 py-1 text-xs text-brand-300">
           <span className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse" />
-          Gratuit · Sans inscription · Sans filigrane
+          {t.hero.badge}
         </div>
 
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
-          Téléchargez vos vidéos{' '}
+          {t.hero.titleBefore}
           <span className="text-brand-500">TikTok</span>
+          {t.hero.titleAfter}
         </h1>
         <p className="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-          Collez le lien d&apos;une vidéo TikTok et téléchargez-la en HD,
-          avec ou sans filigrane, ou en MP3.
+          {t.hero.subtitle}
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
@@ -86,9 +88,9 @@ export default function HeroSection() {
             className="flex items-center justify-center gap-2 rounded-xl bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-semibold px-6 py-3 text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
           >
             {loading ? (
-              <><Loader2 className="h-4 w-4 animate-spin" /> Chargement…</>
+              <><Loader2 className="h-4 w-4 animate-spin" /> {t.hero.loading}</>
             ) : (
-              <><Download className="h-4 w-4" /> Télécharger</>
+              <><Download className="h-4 w-4" /> {t.hero.submit}</>
             )}
           </button>
         </form>

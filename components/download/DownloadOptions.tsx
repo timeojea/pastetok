@@ -3,17 +3,18 @@
 import { useState } from 'react';
 import { Download, Loader2, Music, Video, Sparkles } from 'lucide-react';
 import { TikTokVideo, downloadFile } from '@/lib/tiktok';
+import { DICT, type Lang } from '@/lib/i18n';
 
 interface DownloadOptionsProps {
   video: TikTokVideo;
+  lang: Lang;
 }
 
 type DownloadType = 'no_watermark' | 'watermark' | 'audio';
 
 interface Option {
   type: DownloadType;
-  label: string;
-  description: string;
+  text: 'noWatermark' | 'watermark' | 'audio';
   icon: React.ElementType;
   url: (v: TikTokVideo) => string;
   filename: (v: TikTokVideo) => string;
@@ -23,8 +24,7 @@ interface Option {
 const options: Option[] = [
   {
     type: 'no_watermark',
-    label: 'Sans filigrane',
-    description: 'Vidéo HD originale sans logo TikTok',
+    text: 'noWatermark',
     icon: Sparkles,
     url: (v) => v.noWatermarkUrl,
     filename: (v) => `tiktok_${v.id}_nowm.mp4`,
@@ -32,23 +32,22 @@ const options: Option[] = [
   },
   {
     type: 'watermark',
-    label: 'Avec filigrane',
-    description: 'Vidéo avec le filigrane TikTok',
+    text: 'watermark',
     icon: Video,
     url: (v) => v.watermarkUrl,
     filename: (v) => `tiktok_${v.id}.mp4`,
   },
   {
     type: 'audio',
-    label: 'Audio MP3',
-    description: 'Extraire uniquement la musique',
+    text: 'audio',
     icon: Music,
     url: (v) => v.audioUrl,
     filename: (v) => `tiktok_${v.id}.mp3`,
   },
 ];
 
-export default function DownloadOptions({ video }: DownloadOptionsProps) {
+export default function DownloadOptions({ video, lang }: DownloadOptionsProps) {
+  const t = DICT[lang].options;
   const [pending, setPending] = useState<DownloadType | null>(null);
   const [opened, setOpened] = useState(false);
 
@@ -65,7 +64,7 @@ export default function DownloadOptions({ video }: DownloadOptionsProps) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-white font-semibold text-sm mb-4">Choisissez votre format :</h3>
+      <h3 className="text-white font-semibold text-sm mb-4">{t.heading}</h3>
       {options.map((opt) => {
         const url = opt.url(video);
         const disabled = !url || pending !== null;
@@ -89,15 +88,15 @@ export default function DownloadOptions({ video }: DownloadOptionsProps) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className={`font-semibold text-sm ${opt.highlight ? 'text-brand-300' : 'text-white'}`}>
-                  {opt.label}
+                  {t[opt.text].label}
                 </span>
                 {opt.highlight && (
                   <span className="rounded-full bg-brand-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
-                    RECOMMANDÉ
+                    {t.recommended}
                   </span>
                 )}
               </div>
-              <p className="text-xs text-gray-400">{opt.description}</p>
+              <p className="text-xs text-gray-400">{t[opt.text].description}</p>
             </div>
             {isPending ? (
               <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin text-brand-400" />
@@ -110,7 +109,7 @@ export default function DownloadOptions({ video }: DownloadOptionsProps) {
 
       {opened && (
         <p className="text-xs text-gray-400">
-          Le fichier s&apos;est ouvert dans un nouvel onglet : utilisez « Enregistrer » (ou appui long sur mobile).
+          {t.opened}
         </p>
       )}
     </div>

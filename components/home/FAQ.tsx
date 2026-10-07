@@ -2,42 +2,18 @@
 
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { DICT, type Lang } from '@/lib/i18n';
 
-const faqs = [
-  {
-    q: 'Est-ce gratuit ?',
-    a: 'Oui, PasteTok est entièrement gratuit et sans inscription.',
-  },
-  {
-    q: 'Comment supprimer le filigrane TikTok ?',
-    a: 'Choisissez l\'option "Sans filigrane" sur la page de téléchargement. Notre outil utilise l\'URL de streaming originale sans watermark.',
-  },
-  {
-    q: 'Puis-je télécharger des vidéos privées ?',
-    a: 'Non. Seules les vidéos publiques peuvent être téléchargées. Les vidéos privées ou supprimées ne sont pas accessibles.',
-  },
-  {
-    q: 'Quel est le nombre maximum de téléchargements ?',
-    a: 'Aucune limite de notre côté. Le service tiers qui extrait les vidéos (tikwm.com) peut toutefois limiter les requêtes trop rapprochées.',
-  },
-  {
-    q: 'Stockez-vous mes vidéos ?',
-    a: 'Non. PasteTok n\'a pas de serveur : tout se passe dans votre navigateur, le fichier est récupéré directement depuis les serveurs TikTok.',
-  },
-  {
-    q: 'C\'est légal ?',
-    a: 'PasteTok est un outil de téléchargement personnel. Vous êtes responsable du respect des droits d\'auteur. N\'utilisez pas les vidéos téléchargées à des fins commerciales sans l\'accord des créateurs.',
-  },
-];
-
-export default function FAQ() {
+export default function FAQ({ lang }: { lang: Lang }) {
+  const t = DICT[lang].faq;
+  const faqs = t.items;
   const [open, setOpen] = useState<number | null>(null);
 
   return (
     <section className="py-16 px-4 bg-gray-900/50">
       <div className="mx-auto max-w-2xl">
         <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">
-          Questions fréquentes
+          {t.title}
         </h2>
 
         <div className="space-y-2">
