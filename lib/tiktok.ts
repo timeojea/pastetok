@@ -19,11 +19,11 @@ export interface TikTokApiResponse {
 }
 
 // Using tikwm.com public API — no key required.
-// Appelée directement depuis le navigateur (tikwm renvoie Access-Control-Allow-Origin: *).
+// Called straight from the browser (tikwm returns Access-Control-Allow-Origin: *).
 const TIKWM_ORIGIN = 'https://www.tikwm.com';
 const TIKWM_API = `${TIKWM_ORIGIN}/api/`;
 
-// tikwm renvoie parfois des chemins relatifs (/video/media/...) au lieu d'URLs CDN absolues
+// tikwm sometimes returns relative paths (/video/media/...) instead of absolute CDN URLs
 function absolute(url: string | undefined): string {
   if (!url) return '';
   return url.startsWith('/') ? TIKWM_ORIGIN + url : url;
@@ -33,7 +33,7 @@ export async function fetchTikTokVideo(url: string): Promise<TikTokApiResponse> 
   try {
     const response = await fetch(TIKWM_API, {
       method: 'POST',
-      // Requête « simple » (form-urlencoded, pas d'en-tête custom) : pas de preflight CORS
+      // "Simple" request (form-urlencoded, no custom header): no CORS preflight
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ url, hd: '1' }).toString(),
       signal: AbortSignal.timeout(15000),
@@ -83,9 +83,9 @@ export async function fetchTikTokVideo(url: string): Promise<TikTokApiResponse> 
 }
 
 /**
- * Télécharge un fichier distant sous `filename`. Le CDN TikTok autorise le CORS :
- * fetch → blob → <a download>. Si le fetch échoue (CORS, réseau), on ouvre l'URL
- * dans un nouvel onglet : l'utilisateur peut alors enregistrer le fichier à la main.
+ * Downloads a remote file as `filename`. The TikTok CDN allows CORS:
+ * fetch → blob → <a download>. If the fetch fails (CORS, network), the URL opens
+ * in a new tab so the user can save the file manually.
  */
 export async function downloadFile(url: string, filename: string): Promise<'saved' | 'opened'> {
   try {

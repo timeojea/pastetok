@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
-// Export 100 % statique pour GitHub Pages (servi sous /pastetok).
-// Pas de serveur : l'API tikwm et le CDN TikTok autorisent le CORS, tout se fait côté navigateur.
+// Fully static export for GitHub Pages (served under /pastetok).
+// No server: the tikwm API and the TikTok CDN allow CORS, everything runs in the browser.
 const nextConfig = {
   output: 'export',
   basePath: '/pastetok',

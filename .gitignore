@@ -32,5 +32,5 @@ next-env.d.ts
 # Claude Code (local)
 .claude/settings.local.json
 
-# base locale (ancienne version serveur)
+# local database (legacy server version)
 *.db

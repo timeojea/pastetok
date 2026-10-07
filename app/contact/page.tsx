@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: 'Contact',
 };
 
-// Site 100 % statique (GitHub Pages) : pas de backend pour un formulaire.
-// Le contact passe par les issues GitHub du projet open source.
+// Fully static site (GitHub Pages): no backend for a contact form.
+// Contact goes through the open source project's GitHub issues.
 const ISSUES_URL = 'https://github.com/timeojea/pastetok/issues';
 
 export default function ContactPage() {
