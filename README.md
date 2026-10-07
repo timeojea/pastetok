@@ -1,145 +1,76 @@
 # PasteTok
 
-Plateforme web de téléchargement de vidéos TikTok, monétisée par Adsterra.
+Téléchargeur de vidéos TikTok : MP4 sans filigrane, avec filigrane, ou MP3. Gratuit, sans inscription, sans pub, sans cookie.
+
+**▶ [timeojea.github.io/pastetok](https://timeojea.github.io/pastetok/)**
+
+## Comment ça marche
+
+Site **100 % statique** (export Next.js) hébergé sur GitHub Pages. Pas de serveur, pas de base de données : tout se passe dans le navigateur.
+
+1. L'URL TikTok collée est validée côté client (domaines TikTok uniquement).
+2. Le navigateur appelle l'API publique [tikwm.com](https://www.tikwm.com) (sans clé, CORS ouvert) pour obtenir les liens MP4/MP3.
+3. Le fichier est récupéré directement depuis le CDN TikTok (CORS ouvert) puis enregistré via `fetch → blob → <a download>`. Si le fetch échoue, le lien s'ouvre dans un nouvel onglet.
 
 ## Stack
 
-- **Next.js 14** (App Router) + TypeScript
-- **Tailwind CSS**
-- **Prisma** + SQLite (analytics, rate limiting)
-- **tikwm.com** API (récupération vidéos TikTok, sans clé)
-- **Adsterra** (monétisation publicitaire)
+- **Next.js 14** (App Router, `output: 'export'`) + TypeScript
+- **Tailwind CSS**, **lucide-react**
+- **tikwm.com** (extraction des liens vidéo)
+- **GitHub Pages** + GitHub Actions (déploiement à chaque push sur `main`)
 
-## Démarrage rapide
+## Démarrage
 
 ```bash
-# 1. Installer les dépendances
 npm install
-
-# 2. Configurer l'environnement
-cp .env.example .env
-# Éditer .env avec vos valeurs
-
-# 3. Initialiser la base de données
-npx prisma db push
-
-# 4. Lancer en développement
 npm run dev
 ```
 
-Ouvrir [http://localhost:3000](http://localhost:3000).
+Ouvrir [http://localhost:3000/pastetok](http://localhost:3000/pastetok) (le site est servi sous le `basePath` `/pastetok`).
 
-## Configuration
+`npm run build` génère le site statique dans `out/`.
 
-### Variables d'environnement (`.env`)
+### Variables d'environnement (optionnelles)
 
-| Variable | Description | Obligatoire |
-|---|---|---|
-| `DATABASE_URL` | Chemin SQLite (`file:./dev.db`) | Oui |
-| `ADMIN_PASSWORD` | Mot de passe dashboard `/admin` | Oui |
-| `NEXT_PUBLIC_SITE_URL` | URL du site en production | Oui |
-| `IP_HASH_SALT` | Salt pour le hashage des IPs | Oui |
-| `NEXT_PUBLIC_ADSTERRA_BANNER_HEADER` | Zone ID bannière 728×90 (header) | Non |
-| `NEXT_PUBLIC_ADSTERRA_BANNER_SIDEBAR` | Zone ID bannière 300×250 (sidebar) | Non |
-| `NEXT_PUBLIC_ADSTERRA_NATIVE_HOME` | Zone ID native ad (accueil) | Non |
-| `NEXT_PUBLIC_ADSTERRA_POPUNDER` | Zone ID popunder | Non |
-| `NEXT_PUBLIC_ADSTERRA_SOCIAL_BAR` | Zone ID social bar (interstitiel) | Non |
+| Variable | Défaut |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | `https://timeojea.github.io/pastetok` |
+| `NEXT_PUBLIC_SITE_NAME` | `PasteTok` |
 
-> Les zones Adsterra vides sont simplement ignorées — aucune pub ne s'affiche.
-
-### Configurer Adsterra
-
-1. Créer un compte sur [adsterra.com](https://adsterra.com)
-2. Créer des zones publicitaires (Banner, Native, Popunder, Social Bar)
-3. Copier les **Zone IDs** dans `.env`
+Pour un fork servi sous un autre chemin, adapter `basePath` dans `next.config.mjs`.
 
 ## Pages
 
 | Route | Description |
 |---|---|
-| `/` | Accueil — saisie URL TikTok |
-| `/download` | Résultat — aperçu + options de téléchargement |
-| `/admin` | Dashboard analytics (protégé par mot de passe) |
-| `/contact` | Formulaire de contact |
-| `/mentions-legales` | Mentions légales |
-| `/cgu` | Conditions générales d'utilisation |
-| `/politique-de-confidentialite` | Politique de confidentialité RGPD |
+| `/` | Accueil, saisie de l'URL TikTok |
+| `/download` | Aperçu + choix du format |
+| `/contact` | Renvoie vers les issues GitHub |
+| `/mentions-legales`, `/cgu`, `/politique-de-confidentialite` | Pages légales |
 
-## API
-
-| Route | Méthode | Description |
-|---|---|---|
-| `/api/download` | `POST` | Récupère les métadonnées d'une vidéo TikTok |
-| `/api/proxy` | `GET` | Proxy de téléchargement (évite les erreurs CORS) |
-| `/api/stats` | `GET` | Statistiques admin (Bearer token requis) |
-| `/api/contact` | `POST` | Réception des messages du formulaire |
-
-### Exemple `/api/download`
-
-```bash
-curl -X POST http://localhost:3000/api/download \
-  -H "Content-Type: application/json" \
-  -d '{"url": "https://www.tiktok.com/@user/video/123"}'
-```
-
-## Sécurité
-
-- Validation stricte des URLs (domaines TikTok uniquement)
-- Rate limiting : **20 requêtes/heure** par IP
-- IPs hashées via HMAC-SHA256 (jamais stockées en clair)
-- Headers de sécurité : CSP, X-Frame-Options, X-Content-Type-Options
-- Inputs sanitisés côté serveur
-
-## Déploiement
-
-### Vercel
-
-```bash
-npm i -g vercel
-vercel --prod
-```
-
-Ajouter les variables d'environnement dans le dashboard Vercel.
-
-> **Note SQLite + Vercel :** SQLite ne persiste pas entre les déploiements sur Vercel (filesystem éphémère). Pour la production, migrer vers **Turso** (SQLite distribué) ou **PostgreSQL** (Neon, Supabase).
-
-### VPS (Ubuntu)
-
-```bash
-# Build
-npm run build
-
-# Démarrer avec PM2
-npm install -g pm2
-pm2 start npm --name "pastetok" -- start
-pm2 save && pm2 startup
-```
-
-Configurer un reverse proxy Nginx sur le port 3000.
-
-## Structure des fichiers
+## Structure
 
 ```
-├── app/
-│   ├── api/          — Routes API (download, proxy, stats, contact)
-│   ├── download/     — Page résultat
-│   ├── admin/        — Dashboard analytics
-│   └── ...           — Pages statiques (CGU, mentions, etc.)
+├── app/              — Pages (App Router) + sitemap
 ├── components/
-│   ├── ads/          — Composants publicitaires Adsterra
 │   ├── layout/       — Header, Footer
 │   ├── home/         — Hero, HowItWorks, FAQ
-│   └── download/     — VideoPreview, DownloadOptions, AdInterstitial
+│   └── download/     — VideoPreview, DownloadOptions
 ├── lib/
-│   ├── adsterra.ts   — Config centralisée zones Adsterra
-│   ├── tiktok.ts     — Client API tikwm.com
-│   ├── rate-limit.ts — Rate limiting par IP
-│   ├── security.ts   — Validation, hashage, sanitization
-│   └── db.ts         — Singleton Prisma
-└── prisma/
-    └── schema.prisma — Modèles Download + RateLimit
+│   ├── tiktok.ts     — Client tikwm.com + téléchargement (changer de fournisseur ici)
+│   └── security.ts   — Validation d'URL, nettoyage des entrées
+└── .github/workflows/deploy.yml — Build + déploiement GitHub Pages
 ```
+
+## Limites
+
+- Dépend de **tikwm.com** : si l'API tombe, change ses règles CORS ou devient payante, le site ne fonctionne plus.
+- Les vidéos restent la propriété de leurs créateurs. Outil destiné à un usage personnel : respectez les droits d'auteur et les conditions de TikTok.
+
+## Contribuer
+
+Issues et pull requests bienvenues.
 
 ## Licence
 
-Usage personnel. Les vidéos TikTok restent la propriété de leurs créateurs.
+[MIT](LICENSE) © Timéo Jeannin

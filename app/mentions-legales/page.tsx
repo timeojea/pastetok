@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Mentions légales',
@@ -13,17 +14,24 @@ export default function MentionsLegalesPage() {
         <section>
           <h2 className="text-white text-xl font-semibold mb-3">Éditeur du site</h2>
           <p>
-            Le site PasteTok est édité à titre personnel. Pour tout contact,
-            veuillez utiliser le formulaire disponible sur la page{' '}
-            <a href="/contact" className="text-brand-400 hover:text-brand-300 underline">Contact</a>.
+            Le site PasteTok est édité à titre personnel. Pour tout contact, voir la page{' '}
+            <Link href="/contact" className="text-brand-400 hover:text-brand-300 underline">Contact</Link>.
           </p>
         </section>
 
         <section>
           <h2 className="text-white text-xl font-semibold mb-3">Hébergement</h2>
           <p>
-            Ce site est hébergé sur des serveurs conformes à la réglementation européenne en matière
-            de protection des données. L&apos;hébergeur peut être contacté via la page Contact.
+            Ce site est hébergé par GitHub Pages — GitHub, Inc., 88 Colin P. Kelly Jr. Street,
+            San Francisco, CA 94107, États-Unis. Code source (licence MIT) :{' '}
+            <a
+              href="https://github.com/timeojea/pastetok"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-400 hover:text-brand-300 underline"
+            >
+              github.com/timeojea/pastetok
+            </a>.
           </p>
         </section>
 
@@ -49,9 +57,7 @@ export default function MentionsLegalesPage() {
         <section>
           <h2 className="text-white text-xl font-semibold mb-3">Cookies et publicités</h2>
           <p>
-            Ce site utilise des services publicitaires tiers (Adsterra) susceptibles de
-            déposer des cookies sur votre terminal. Vous pouvez configurer votre navigateur
-            pour refuser ces cookies.
+            Ce site ne dépose aucun cookie et n&apos;affiche aucune publicité.
           </p>
         </section>
       </div>

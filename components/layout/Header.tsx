@@ -1,8 +1,4 @@
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import { ADSTERRA_CONFIG } from '@/lib/adsterra';
-
-const AdsterraBanner = dynamic(() => import('@/components/ads/AdsterraBanner'), { ssr: false });
 
 export default function Header() {
   return (
@@ -18,15 +14,6 @@ export default function Header() {
           <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
         </nav>
       </div>
-      {ADSTERRA_CONFIG.bannerHeader && (
-        <div className="flex justify-center py-1 bg-gray-900">
-          <AdsterraBanner
-            zone={ADSTERRA_CONFIG.bannerHeader}
-            width={728}
-            height={90}
-          />
-        </div>
-      )}
     </header>
   );
 }

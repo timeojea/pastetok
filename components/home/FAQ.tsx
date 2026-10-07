@@ -18,11 +18,11 @@ const faqs = [
   },
   {
     q: 'Quel est le nombre maximum de téléchargements ?',
-    a: 'Vous pouvez effectuer jusqu\'à 20 téléchargements par heure par adresse IP.',
+    a: 'Aucune limite de notre côté. Le service tiers qui extrait les vidéos (tikwm.com) peut toutefois limiter les requêtes trop rapprochées.',
   },
   {
     q: 'Stockez-vous mes vidéos ?',
-    a: 'Non. Nous ne stockons aucune vidéo sur nos serveurs. Le lien de téléchargement pointe directement vers les serveurs TikTok.',
+    a: 'Non. PasteTok n\'a pas de serveur : tout se passe dans votre navigateur, le fichier est récupéré directement depuis les serveurs TikTok.',
   },
   {
     q: 'C\'est légal ?',

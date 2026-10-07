@@ -3,14 +3,9 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import dynamic from 'next/dynamic';
-import { ADSTERRA_CONFIG } from '@/lib/adsterra';
-
-const AdsterraPopunder = dynamic(() => import('@/components/ads/AdsterraPopunder'), { ssr: false });
-
 const inter = Inter({ subsets: ['latin'] });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pastetok.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://timeojea.github.io/pastetok';
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'PasteTok';
 
 export const metadata: Metadata = {
@@ -57,9 +52,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className="dark">
       <body className={inter.className}>
-        {ADSTERRA_CONFIG.popunder && (
-          <AdsterraPopunder zone={ADSTERRA_CONFIG.popunder} />
-        )}
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />

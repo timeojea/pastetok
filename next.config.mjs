@@ -1,41 +1,11 @@
 /** @type {import('next').NextConfig} */
+// Export 100 % statique pour GitHub Pages (servi sous /pastetok).
+// Pas de serveur : l'API tikwm et le CDN TikTok autorisent le CORS, tout se fait côté navigateur.
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: '*.tiktokcdn.com' },
-      { protocol: 'https', hostname: '*.tiktokcdn-us.com' },
-      { protocol: 'https', hostname: 'p16-sign.tiktokcdn-us.com' },
-      { protocol: 'https', hostname: 'p19-sign.tiktokcdn-us.com' },
-      { protocol: 'https', hostname: 'p77-sign.tiktokcdn-us.com' },
-      { protocol: 'https', hostname: 'p16-sign-va.tiktokcdn.com' },
-    ],
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.adsterra.com *.adsrv.org *.highperformanceformat.com *.highcpmgate.com *.financepowerpouch.com",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: *.tiktokcdn.com *.tiktokcdn-us.com *.adsterra.com *.adsrv.org",
-              "media-src 'self' blob: *.tiktokcdn.com *.tiktokcdn-us.com",
-              "connect-src 'self' *.adsterra.com *.adsrv.org *.highperformanceformat.com *.highcpmgate.com",
-              "frame-src 'self' *.adsterra.com *.adsrv.org",
-              "font-src 'self' data:",
-            ].join('; '),
-          },
-        ],
-      },
-    ];
-  },
+  output: 'export',
+  basePath: '/pastetok',
+  trailingSlash: true,
+  images: { unoptimized: true },
 };
 
 export default nextConfig;

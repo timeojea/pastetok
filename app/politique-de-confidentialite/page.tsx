@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
@@ -12,78 +13,64 @@ export default function PolitiqueConfidentialitePage() {
       <div className="space-y-6 text-gray-300 text-sm leading-relaxed">
         <section>
           <h2 className="text-white text-xl font-semibold mb-3">1. Données collectées</h2>
-          <p>Nous collectons et traitons les données suivantes :</p>
+          <p>
+            <strong>Aucune.</strong> PasteTok est un site statique sans serveur ni base de données :
+            nous ne collectons, ne stockons et ne journalisons aucune donnée (ni adresse IP, ni URL,
+            ni statistiques, ni compte TikTok).
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-white text-xl font-semibold mb-3">2. Services tiers</h2>
+          <p>Votre navigateur communique directement avec :</p>
           <ul className="list-disc list-inside mt-2 space-y-1">
-            <li>Adresse IP <strong>anonymisée</strong> (hashée via HMAC-SHA256) pour le rate limiting</li>
-            <li>URL des vidéos téléchargées (sans données personnelles)</li>
-            <li>Horodatage et type de téléchargement (statistiques anonymes)</li>
+            <li>
+              <strong>tikwm.com</strong>, qui reçoit l&apos;URL TikTok collée pour en extraire les liens de
+              téléchargement ;
+            </li>
+            <li>
+              <strong>les serveurs TikTok</strong> (CDN), d&apos;où le fichier est téléchargé ;
+            </li>
+            <li>
+              <strong>GitHub Pages</strong>, qui héberge le site et peut journaliser les adresses IP des
+              visiteurs pour des raisons de sécurité (voir la{' '}
+              <a
+                href="https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-400 hover:text-brand-300 underline"
+              >
+                déclaration de confidentialité de GitHub
+              </a>
+              ).
+            </li>
           </ul>
-          <p className="mt-2">
-            Nous ne collectons <strong>ni nom, ni email, ni données de compte TikTok</strong>.
+        </section>
+
+        <section>
+          <h2 className="text-white text-xl font-semibold mb-3">3. Stockage local</h2>
+          <p>
+            Les informations de la vidéo en cours sont gardées dans le <em>sessionStorage</em> de votre
+            navigateur le temps d&apos;afficher la page de téléchargement. Elles sont effacées à la
+            fermeture de l&apos;onglet et ne nous sont jamais transmises.
           </p>
         </section>
 
         <section>
-          <h2 className="text-white text-xl font-semibold mb-3">2. Finalités du traitement</h2>
-          <ul className="list-disc list-inside space-y-1">
-            <li>Prévention des abus (rate limiting)</li>
-            <li>Statistiques d&apos;utilisation anonymes</li>
-            <li>Amélioration du service</li>
-          </ul>
+          <h2 className="text-white text-xl font-semibold mb-3">4. Cookies et publicités</h2>
+          <p>Ce site ne dépose aucun cookie et n&apos;affiche aucune publicité.</p>
         </section>
 
         <section>
-          <h2 className="text-white text-xl font-semibold mb-3">3. Base légale</h2>
+          <h2 className="text-white text-xl font-semibold mb-3">5. Contact</h2>
           <p>
-            Le traitement est fondé sur notre intérêt légitime à sécuriser et améliorer notre service
-            (article 6.1.f du RGPD).
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-white text-xl font-semibold mb-3">4. Durée de conservation</h2>
-          <p>
-            Les données de logs sont conservées pour une durée maximale de <strong>90 jours</strong>,
-            puis supprimées automatiquement.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-white text-xl font-semibold mb-3">5. Publicités (Adsterra)</h2>
-          <p>
-            Ce site utilise le réseau publicitaire Adsterra. Ces publicités peuvent utiliser des cookies
-            tiers pour personnaliser les annonces. Pour en savoir plus :{' '}
-            <a
-              href="https://www.adsterra.com/privacy-policy/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-brand-400 hover:text-brand-300 underline"
-            >
-              Politique de confidentialité Adsterra
-            </a>.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-white text-xl font-semibold mb-3">6. Vos droits</h2>
-          <p>
-            Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et d&apos;effacement
-            de vos données. Pour exercer ces droits, contactez-nous via la page{' '}
-            <a href="/contact" className="text-brand-400 hover:text-brand-300 underline">Contact</a>.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-white text-xl font-semibold mb-3">7. Cookies</h2>
-          <p>
-            Ce site utilise uniquement des cookies fonctionnels nécessaires à son bon fonctionnement.
-            Les cookies publicitaires sont gérés par Adsterra. Vous pouvez les désactiver via les
-            paramètres de votre navigateur.
+            Pour toute question, voir la page{' '}
+            <Link href="/contact" className="text-brand-400 hover:text-brand-300 underline">Contact</Link>.
           </p>
         </section>
 
         <p className="text-xs text-gray-500 pt-4 border-t border-gray-800">
-          Dernière mise à jour : avril 2026
+          Dernière mise à jour : octobre 2026
         </p>
       </div>
     </div>

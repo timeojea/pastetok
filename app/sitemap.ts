@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pastetok.com';
+export const dynamic = 'force-static';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://timeojea.github.io/pastetok';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

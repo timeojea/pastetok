@@ -18,17 +18,23 @@ export interface TikTokApiResponse {
   error?: string;
 }
 
-// Using tikwm.com public API — no key required
-const TIKWM_API = 'https://www.tikwm.com/api/';
+// Using tikwm.com public API — no key required.
+// Appelée directement depuis le navigateur (tikwm renvoie Access-Control-Allow-Origin: *).
+const TIKWM_ORIGIN = 'https://www.tikwm.com';
+const TIKWM_API = `${TIKWM_ORIGIN}/api/`;
+
+// tikwm renvoie parfois des chemins relatifs (/video/media/...) au lieu d'URLs CDN absolues
+function absolute(url: string | undefined): string {
+  if (!url) return '';
+  return url.startsWith('/') ? TIKWM_ORIGIN + url : url;
+}
 
 export async function fetchTikTokVideo(url: string): Promise<TikTokApiResponse> {
   try {
     const response = await fetch(TIKWM_API, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': 'Mozilla/5.0 (compatible; PasteTok/1.0)',
-      },
+      // Requête « simple » (form-urlencoded, pas d'en-tête custom) : pas de preflight CORS
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ url, hd: '1' }).toString(),
       signal: AbortSignal.timeout(15000),
     });
@@ -58,14 +64,14 @@ export async function fetchTikTokVideo(url: string): Promise<TikTokApiResponse> 
         id: d.id || '',
         title: d.title || '',
         author: d.author?.nickname || d.author?.unique_id || 'Inconnu',
-        authorAvatar: d.author?.avatar || '',
-        thumbnail: d.cover || d.origin_cover || '',
+        authorAvatar: absolute(d.author?.avatar),
+        thumbnail: absolute(d.cover || d.origin_cover),
         duration: d.duration || 0,
         plays: d.play_count || 0,
         likes: d.digg_count || 0,
-        noWatermarkUrl: d.play || d.wmplay || '',
-        watermarkUrl: d.wmplay || d.play || '',
-        audioUrl: d.music || '',
+        noWatermarkUrl: absolute(d.play || d.wmplay),
+        watermarkUrl: absolute(d.wmplay || d.play),
+        audioUrl: absolute(d.music),
       },
     };
   } catch (err) {
@@ -73,6 +79,30 @@ export async function fetchTikTokVideo(url: string): Promise<TikTokApiResponse> 
       return { success: false, error: 'La requête a expiré. Réessayez.' };
     }
     return { success: false, error: 'Erreur réseau. Réessayez dans quelques instants.' };
+  }
+}
+
+/**
+ * Télécharge un fichier distant sous `filename`. Le CDN TikTok autorise le CORS :
+ * fetch → blob → <a download>. Si le fetch échoue (CORS, réseau), on ouvre l'URL
+ * dans un nouvel onglet : l'utilisateur peut alors enregistrer le fichier à la main.
+ */
+export async function downloadFile(url: string, filename: string): Promise<'saved' | 'opened'> {
+  try {
+    const res = await fetch(url, { referrerPolicy: 'no-referrer' });
+    if (!res.ok) throw new Error(String(res.status));
+    const blobUrl = URL.createObjectURL(await res.blob());
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+    return 'saved';
+  } catch {
+    window.open(url, '_blank', 'noopener,noreferrer');
+    return 'opened';
   }
 }
 

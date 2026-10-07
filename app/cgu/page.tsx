@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: "Conditions Générales d'Utilisation",
@@ -33,7 +34,6 @@ export default function CGUPage() {
             <li>Télécharger des vidéos à des fins commerciales sans accord préalable des créateurs</li>
             <li>Redistribuer, revendre ou monétiser les vidéos téléchargées</li>
             <li>Utiliser le service de manière automatisée ou à des fins de scraping</li>
-            <li>Tenter de contourner les mesures de rate limiting</li>
             <li>Télécharger du contenu protégé par des droits d&apos;auteur sans autorisation</li>
           </ul>
         </section>
@@ -58,9 +58,9 @@ export default function CGUPage() {
         <section>
           <h2 className="text-white text-xl font-semibold mb-3">6. Données personnelles</h2>
           <p>
-            Voir notre <a href="/politique-de-confidentialite" className="text-brand-400 hover:text-brand-300 underline">
+            Voir notre <Link href="/politique-de-confidentialite" className="text-brand-400 hover:text-brand-300 underline">
               Politique de confidentialité
-            </a>.
+            </Link>.
           </p>
         </section>
 

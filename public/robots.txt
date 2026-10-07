@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /api/
 
-Sitemap: https://pastetok.com/sitemap.xml
+Sitemap: https://timeojea.github.io/pastetok/sitemap.xml

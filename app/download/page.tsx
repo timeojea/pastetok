@@ -7,10 +7,6 @@ import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { TikTokVideo } from '@/lib/tiktok';
 import VideoPreview from '@/components/download/VideoPreview';
 import DownloadOptions from '@/components/download/DownloadOptions';
-import dynamic from 'next/dynamic';
-import { ADSTERRA_CONFIG } from '@/lib/adsterra';
-
-const AdsterraBanner = dynamic(() => import('@/components/ads/AdsterraBanner'), { ssr: false });
 
 export default function DownloadPage() {
   const [video, setVideo] = useState<TikTokVideo | null>(null);
@@ -70,18 +66,8 @@ export default function DownloadPage() {
           <DownloadOptions video={video} />
         </div>
 
-        {/* Sidebar with banner ad */}
+        {/* Sidebar */}
         <div className="space-y-4">
-          {ADSTERRA_CONFIG.bannerSidebar && (
-            <div className="rounded-xl bg-gray-900 border border-gray-800 p-3 flex justify-center">
-              <AdsterraBanner
-                zone={ADSTERRA_CONFIG.bannerSidebar}
-                width={300}
-                height={250}
-              />
-            </div>
-          )}
-
           {/* Tips card */}
           <div className="rounded-xl bg-gray-900 border border-gray-800 p-4">
             <h3 className="text-white font-semibold text-sm mb-2">Conseils</h3>

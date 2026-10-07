@@ -3,6 +3,8 @@
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Download, Loader2, Link as LinkIcon } from 'lucide-react';
+import { fetchTikTokVideo } from '@/lib/tiktok';
+import { isValidTikTokUrl, sanitizeString } from '@/lib/security';
 
 export default function HeroSection() {
   const [url, setUrl] = useState('');
@@ -14,28 +16,27 @@ export default function HeroSection() {
     e.preventDefault();
     setError('');
 
-    if (!url.trim()) {
+    const cleanUrl = sanitizeString(url);
+    if (!cleanUrl) {
       setError('Collez une URL TikTok ici.');
+      return;
+    }
+    if (!isValidTikTokUrl(cleanUrl)) {
+      setError('URL invalide. Seules les URLs TikTok (tiktok.com, vm.tiktok.com) sont acceptées.');
       return;
     }
 
     setLoading(true);
     try {
-      const res = await fetch('/api/download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim() }),
-      });
+      const result = await fetchTikTokVideo(cleanUrl);
 
-      const data = await res.json();
-
-      if (!res.ok || !data.video) {
-        setError(data.error || 'Erreur inconnue.');
+      if (!result.success || !result.video) {
+        setError(result.error || 'Erreur inconnue.');
         return;
       }
 
       // Store result in sessionStorage for the download page
-      sessionStorage.setItem('tiktok_video', JSON.stringify(data.video));
+      sessionStorage.setItem('tiktok_video', JSON.stringify(result.video));
       router.push('/download');
     } catch {
       setError('Erreur réseau. Vérifiez votre connexion.');
