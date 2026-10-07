@@ -14,12 +14,6 @@ Gratuit · Sans inscription · Sans pub · Sans cookie · Sans serveur
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)
 ![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-222?logo=github&logoColor=white)
 
-<br>
-
-<img src="docs/home.png" alt="Page d'accueil de PasteTok sur ordinateur" width="68%">
-&nbsp;
-<img src="docs/mobile.jpg" alt="Page d'accueil de PasteTok sur mobile" width="22%">
-
 </div>
 
 ---
