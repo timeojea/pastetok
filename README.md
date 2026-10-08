@@ -5,9 +5,9 @@
 **Download any public TikTok video as MP4 without watermark, with watermark, or as MP3.**
 Free · No sign-up · No ads · No cookies · No server · English & French
 
-### [▶ Try it: timeojea.github.io/pastetok](https://timeojea.github.io/pastetok/)
+### [▶ Try it: trk78.github.io/pastetok](https://trk78.github.io/pastetok/)
 
-[![Deploy](https://github.com/timeojea/pastetok/actions/workflows/deploy.yml/badge.svg)](https://github.com/timeojea/pastetok/actions/workflows/deploy.yml)
+[![Deploy](https://github.com/trk78/pastetok/actions/workflows/deploy.yml/badge.svg)](https://github.com/trk78/pastetok/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-ff2d6f.svg)](LICENSE)
 ![Next.js](https://img.shields.io/badge/Next.js_14-black?logo=nextdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
@@ -62,7 +62,7 @@ No proxy is needed because both tikwm **and** the TikTok CDN return `Access-Cont
 Requirements: Node.js 20+.
 
 ```bash
-git clone https://github.com/timeojea/pastetok.git
+git clone https://github.com/trk78/pastetok.git
 cd pastetok
 npm install
 npm run dev
@@ -80,7 +80,7 @@ Open **[localhost:3000/pastetok](http://localhost:3000/pastetok)**: the site is 
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://timeojea.github.io/pastetok` | Canonical URL, Open Graph, sitemap |
+| `NEXT_PUBLIC_SITE_URL` | `https://trk78.github.io/pastetok` | Canonical URL, Open Graph, sitemap |
 | `NEXT_PUBLIC_SITE_NAME` | `PasteTok` | Name used in metadata |
 
 ## 🌍 Host your own copy
@@ -121,7 +121,7 @@ Since `out/` is fully static, it can also be deployed as-is to Cloudflare Pages,
 
 ## 🤝 Contributing
 
-Issues and pull requests are welcome: [open an issue](https://github.com/timeojea/pastetok/issues).
+Issues and pull requests are welcome: [open an issue](https://github.com/trk78/pastetok/issues).
 
 Open ideas:
 - fallback provider when tikwm is unavailable;

@@ -3,7 +3,7 @@ import { DICT, type Lang } from '@/lib/i18n';
 
 // Fully static site (GitHub Pages): no backend for a contact form.
 // Contact goes through the open source project's GitHub issues.
-const ISSUES_URL = 'https://github.com/timeojea/pastetok/issues';
+const ISSUES_URL = 'https://github.com/trk78/pastetok/issues';
 
 export default function ContactView({ lang }: { lang: Lang }) {
   const t = DICT[lang].contact;

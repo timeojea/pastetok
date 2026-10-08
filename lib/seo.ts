@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { DICT, LANGS, ROUTES, type Lang, type PageKey } from './i18n';
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://timeojea.github.io/pastetok').replace(/\/$/, '');
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://trk78.github.io/pastetok').replace(/\/$/, '');
 export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || 'PasteTok';
 
 export const absoluteUrl = (lang: Lang, page: PageKey) => SITE_URL + ROUTES[lang][page];

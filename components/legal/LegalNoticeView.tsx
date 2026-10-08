@@ -3,8 +3,8 @@ import { DICT, ROUTES, type Lang } from '@/lib/i18n';
 import LegalPage, { linkClass, type LegalSection } from './LegalPage';
 
 const REPO = (
-  <a href="https://github.com/timeojea/pastetok" target="_blank" rel="noopener noreferrer" className={linkClass}>
-    github.com/timeojea/pastetok
+  <a href="https://github.com/trk78/pastetok" target="_blank" rel="noopener noreferrer" className={linkClass}>
+    github.com/trk78/pastetok
   </a>
 );
 
